@@ -167,6 +167,15 @@
 
                             }
 
+                            @if (group?.get(sub.name)?.errors?.['pattern'] &&
+                            group?.get(sub.name)?.touched) {
+
+                            <div class="err-msg">
+                                {{ sub.label }} pattern is incorrect
+                            </div>
+
+                            }
+
                         </div>
 
                         }
