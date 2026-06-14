@@ -1,60 +1,97 @@
-# ScrrumLabsCode
+# Dynamic JSON-Based Angular Reactive Form
+## Overview
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.13.
+This project is a dynamic form generator built using Angular Reactive Forms, where the entire form structure is driven by a JSON configuration file.
 
-## Development server
+Instead of hardcoding form fields, the UI is generated at runtime based on JSON schema. This makes the form highly scalable, reusable, and configurable without code changes.
 
-To start a local development server, run:
+## Features
+- Dynamic form generation using JSON schema
+- Support for multiple field types:
+    - Text
+    - Email
+    - Select dropdown
+    - Checkbox
+- Nested FormGroup support
+- Dynamic FormArray support (Add/Remove fields)
+- Validator mapping from JSON:
+    - required
+    - email
+    - minlength
+    - pattern
+- Conditional field rendering using visibleWhen
+- Real-time validation error messages
 
-```bash
-ng serve
-```
+## Core Concept / Approach
+1. JSON as Single Source of Truth
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+All form fields are defined inside a JSON file (form.json), including:
 
-## Code scaffolding
+- field name
+- type
+- label
+- validators
+- nested structure (group/array)
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+This allows the form UI to be fully configurable.
 
-```bash
-ng generate component component-name
-```
+2. Dynamic Form Creation (Recursive Logic)
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+The form is generated using a recursive function:
 
-```bash
-ng generate --help
-```
+- If field type is group → creates nested FormGroup
+- If field type is array → creates FormArray
+- Otherwise → creates FormControl with validators
 
-## Building
+This enables support for deeply nested structures.
 
-To build the project run:
+3. Validator Mapping
 
-```bash
-ng build
-```
+A helper function maps JSON validators to Angular validators:
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+Supported mappings:
 
-## Running unit tests
+- required → Validators.required
+- email → Validators.email
+- minLength → Validators.minLength()
+- pattern → Validators.pattern()
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+This keeps validation logic flexible and schema-driven.
 
-```bash
-ng test
-```
+4. Dynamic Rendering in Template
 
-## Running end-to-end tests
+The UI is rendered using Angular template control flow (@for, @if):
 
-For end-to-end (e2e) testing, run:
+- Input fields (text/email)
+- Checkbox fields
+- Select dropdowns
+- Nested groups
+- Dynamic arrays
 
-```bash
-ng e2e
-```
+Each field is rendered based on its type in JSON.
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+5. FormArray Implementation
 
-## Additional Resources
+For dynamic lists (like contacts):
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
-# dynamic-form-angular
+- addContact() → adds new FormGroup into FormArray
+- removeContact(index) → removes a specific entry
+
+Each array item behaves as an independent form group.
+
+6. Conditional Fields (Visibility Logic)
+
+Some fields are conditionally displayed using:
+
+- visibleWhen.field
+- visibleWhen.value
+
+Field is rendered only when condition matches current form value.
+
+7. Form Submission Flow
+
+On submit:
+
+- Form validity is checked
+- If invalid → all fields are marked touched
+- If valid → form value is logged in structured JSON format
