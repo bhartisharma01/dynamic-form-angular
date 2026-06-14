@@ -1,0 +1,197 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+
+            @if (fieldDetails && fieldDetails.length) {
+
+            <form [formGroup]="dynamicForm" (ngSubmit)="onFormSubmit()">
+
+                @for (field of fieldDetails; track field.name) {
+
+                @if (field.type === 'text' || field.type === 'email') {
+                @if (
+                !field.visibleWhen ||
+                form.controls[field.visibleWhen.field]?.value === field.visibleWhen.value
+                ) {
+                <div class="inputField">
+                    <label>{{ field.label }}: </label>
+
+                    <input [type]="field.type" [formControlName]="field.name" />
+
+                    @if (form.controls[field.name]?.errors?.['required'] &&
+                    form.controls[field.name]?.touched) {
+
+                    <div class="err-msg">
+                        {{field.name}} is required
+                    </div>
+
+                    }
+                    @if (form.controls[field.name]?.errors?.['minlength'] &&
+                    form.controls[field.name]?.touched) {
+
+                    <div class="err-msg">
+                        {{field.name}} minimum length should be {{
+                        form.controls[field.name]?.errors?.['minlength']?.requiredLength }}
+                    </div>
+
+                    }
+
+                    @if (form.controls[field.name]?.errors?.['email'] &&
+                    form.controls[field.name]?.touched) {
+
+                    <div class="err-msg">
+                        {{field.name}} should be of email type
+
+                    </div>
+
+                    }
+
+                    @if (form.controls[field.name]?.errors?.['pattern'] &&
+                    form.controls[field.name]?.touched) {
+
+                    <div class="err-msg">
+                        {{field.name}} pattern is incorrect
+
+                    </div>
+
+                    }
+
+                </div>
+                }
+                }
+
+                @if (field.type === 'checkbox') {
+                <div class="inputField">
+
+                    <label>
+                        <input type="checkbox" [formControlName]="field.name" />
+                        {{ field.label }}
+                    </label>
+
+
+                </div>
+                }
+
+
+                @if (field.type === 'select') {
+                <div class="inputField">
+                    <label>{{ field.label }}: </label>
+
+                    <select [formControlName]="field.name">
+                        @for (option of field.options; track option.value) {
+                        <option [value]="option.value">
+                            {{ option.label }}
+                        </option>
+                        }
+                    </select>
+
+                    @if (form.controls[field.name]?.errors?.['required'] &&
+                    form.controls[field.name]?.touched) {
+
+                    <div class="err-msg">
+                        {{field.name}} is required
+                    </div>
+
+                    }
+
+                </div>
+                }
+
+                @if (field.type === 'group') {
+                <div [formGroupName]="field.name">
+
+                    <h4>{{ field.label }}</h4>
+
+                    @for (sub of field.fields; track sub.name) {
+                    <div class="inputField">
+                        <label>{{ sub.label }}: </label>
+
+                        <input [type]="sub.type" [formControlName]="sub.name" />
+                        @if (dynamicForm.get(field.name)?.get(sub.name)?.errors?.['required'] &&
+                        dynamicForm.get(field.name)?.get(sub.name)?.touched) {
+
+                        <small class="err-msg">
+                            {{ sub.label }} is required
+                        </small>
+
+                        }
+                        @if (dynamicForm.get(field.name)?.get(sub.name)?.errors?.['pattern'] &&
+                        dynamicForm.get(field.name)?.get(sub.name)?.touched) {
+
+                        <small class="err-msg">
+                            {{ sub.label }} pattern is incorrect
+                        </small>
+
+                        }
+
+
+                    </div>
+                    }
+
+                </div>
+                }
+
+                @if (field.type === 'array') {
+
+                <div [formArrayName]="field.name">
+
+                    <div>
+                        <h4>{{ field.label }}</h4>
+                        <div>
+                            <button type="button" (click)="addContact()">
+                                + Add Contact
+                            </button>
+                        </div>
+                    </div>
+
+
+                    @for (group of ($any(form.controls[field.name])?.controls); track $index; let i = $index) {
+
+                    <div [formGroupName]="i" class="inputField">
+
+                        <h5>Contact {{ i + 1 }}</h5>
+
+                        @for (sub of field.fields; track sub.name) {
+
+                        <div class="inputField">
+                            <label>{{ sub.label }}: </label>
+
+                            <input [type]="sub.type" [formControlName]="sub.name" />
+
+                            @if (group?.get(sub.name)?.errors?.['required'] &&
+                            group?.get(sub.name)?.touched) {
+
+                            <div class="err-msg">
+                                {{ sub.label }} is required
+                            </div>
+
+                            }
+
+                        </div>
+
+                        }
+                        <button type="button" (click)="removeContact(i)">
+                            Remove Contact
+                        </button>
+
+                    </div>
+
+                    }
+
+
+
+                </div>
+
+                }
+
+                }
+
+                <button type="submit">Submit</button>
+
+            </form>
+
+            }
+
+        </div>
+    </div>
+</div>
