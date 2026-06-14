@@ -95,3 +95,13 @@ On submit:
 - Form validity is checked
 - If invalid → all fields are marked touched
 - If valid → form value is logged in structured JSON format
+
+How to Run the Project
+1. Install dependencies
+npm install
+
+2. Run Angular application
+ng serve
+
+3. Open in browser
+http://localhost:4200
