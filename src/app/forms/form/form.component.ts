@@ -1,10 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { ReactiveFormsModule, FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms'
+import { NormalCounterComponent } from "../../normal-counter/normal-counter.component";
+import { SignalCounterComponent } from "../../signal-counter/signal-counter.component";
 @Component({
   standalone: true,
   selector: 'app-form',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule,],
   templateUrl: './form.component.html',
   styleUrl: './form.component.css'
 })
@@ -114,6 +116,7 @@ export class FormComponent implements OnInit {
     }
     console.log("checking form data...", this.form.value)
   }
+
 
   // create a form  with dynamic labels , validations 
 

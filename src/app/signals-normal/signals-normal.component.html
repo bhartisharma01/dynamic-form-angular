@@ -1,0 +1,15 @@
+<h2>Traditional Getter</h2>
+
+<p>{{ fullName }}</p>
+<p>Counter: {{ counter }}</p>
+
+<button (click)="incrementCounter()"> Increment Counter </button>
+
+<button (click)="updateFirstName()"> Change First Name </button>
+
+<hr>
+
+<h2>Signal Computed</h2>
+
+<p>{{ signalFullName() }}</p>
+<p>Counter: {{ signalCounter() }}</p>
